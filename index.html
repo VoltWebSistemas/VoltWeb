@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="VoltWeb - Criação de sites profissionais que fazem sua empresa vender mais. Tecnologia, inovação e performance para negócios locais e marcas digitais.">
+    <meta name="keywords" content="criação de sites, desenvolvimento web, landing pages, lojas virtuais, SEO, agência digital">
+    <meta name="author" content="VoltWeb">
+    <title>VoltWeb | Sites profissionais que vendem</title>
+     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%232563EB'/><text x='50%' y='50%' text-anchor='middle' dy='.35em' font-size='60' fill='white' font-weight='bold'>V</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%232563EB'/><text x='50%' y='50%' text-anchor='middle' dy='.35em' font-size='60' fill='white' font-weight='bold'>V</text></svg>">
+    <!-- Google Fonts + Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- GSAP & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0B1120;
+            color: #FFFFFF;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Custom Cursor (opcional elegante) */
+        .custom-cursor {
+            width: 8px;
+            height: 8px;
+            background: #3B82F6;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            box-shadow: 0 0 8px #2563EB;
+        }
+
+        @media (max-width: 768px) {
+            .custom-cursor { display: none; }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111827;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2563EB;
+            border-radius: 10px;
+        }
+
+        /* Navbar corrigida - fixa no topo com largura total */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1030;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            background: rgba(11, 17, 32, 0.75);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(59,130,246,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .navbar.scrolled {
+            background: rgba(11, 17, 32, 0.95);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            border-bottom-color: #2563EB;
+        }
+
+        /* Ajuste para o main não ficar atrás do navbar */
+        main {
+            margin-top: 0;
+        }
+
+        section {
+            scroll-margin-top: 80px;
+        }
+
+        /* Glassmorphism & outros estilos */
+        .hero-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(37,99,235,0.2) 0%, rgba(0,0,0,0) 70%);
+            top: -200px;
+            right: -100px;
+            z-index: 0;
+        }
+
+        /* Buttons & cards */
+        .btn-primary {
+            background: linear-gradient(135deg, #2563EB, #3B82F6);
+            border: none;
+            padding: 14px 32px;
+            border-radius: 40px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px rgba(37,99,235,0.3);
+            cursor: pointer;
+        }
+        .btn-primary:hover {
+            transform: scale(1.03);
+            background: linear-gradient(135deg, #3B82F6, #60A5FA);
+            box-shadow: 0 8px 25px rgba(59,130,246,0.5);
+        }
+        .btn-outline-light {
+            background: transparent;
+            border: 1.5px solid rgba(255,255,255,0.5);
+            padding: 14px 32px;
+            border-radius: 40px;
+            font-weight: 500;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .btn-outline-light:hover {
+            border-color: #3B82F6;
+            background: rgba(59,130,246,0.1);
+        }
+
+        /* Service Cards */
+        .service-card {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(4px);
+            border-radius: 28px;
+            padding: 30px 24px;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border: 1px solid rgba(59,130,246,0.2);
+        }
+        .service-card:hover {
+            transform: translateY(-12px);
+            border-color: #3B82F6;
+            box-shadow: 0 25px 35px -12px rgba(37,99,235,0.3);
+            background: rgba(17, 24, 39, 0.9);
+        }
+        .service-icon {
+            font-size: 2.8rem;
+            background: linear-gradient(135deg, #2563EB, #60A5FA);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+        }
+
+        /* Portfolio Grid */
+        .portfolio-item {
+            position: relative;
+            border-radius: 28px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s;
+        }
+        .portfolio-img {
+            background: linear-gradient(145deg, #1E293B, #0F172A);
+            height: 260px;
+            width: 100%;
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #3B82F6;
+            transition: all 0.4s;
+        }
+        .portfolio-item:hover .portfolio-img {
+            transform: scale(1.02);
+            box-shadow: 0 20px 30px -10px #2563EB40;
+        }
+        .overlay-port {
+            position: absolute;
+            bottom: 0;
+            background: linear-gradient(to top, #0B1120, transparent);
+            width: 100%;
+            padding: 20px;
+            opacity: 0;
+            transition: 0.3s;
+        }
+        .portfolio-item:hover .overlay-port {
+            opacity: 1;
+        }
+
+        /* Depoimentos carousel */
+        .testimonial-card {
+            background: rgba(17,24,39,0.8);
+            backdrop-filter: blur(12px);
+            border-radius: 32px;
+            padding: 28px;
+            border: 1px solid rgba(59,130,246,0.3);
+            margin: 12px;
+        }
+
+        /* Floating WhatsApp */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #25D366;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: white;
+            box-shadow: 0 8px 25px rgba(37,211,102,0.4);
+            z-index: 1000;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            background: #20b859;
+        }
+
+        /* Form */
+        .form-input, .form-textarea {
+            background: #111827;
+            border: 1px solid #1F2937;
+            border-radius: 20px;
+            padding: 14px 20px;
+            color: white;
+            width: 100%;
+            transition: all 0.2s;
+        }
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.3);
+        }
+        
+        .mt-3 { margin-top: 16px; }
+        .mt-4 { margin-top: 24px; }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0B1120;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease;
+        }
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 4px solid #2563EB;
+            border-top: 4px solid transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.9s ease;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* nav links */
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover {
+            color: #3B82F6;
+        }
+
+        @media (max-width: 768px) {
+            .btn-primary, .btn-outline-light { padding: 12px 24px; }
+            .navbar {
+                padding: 15px 5%;
+            }
+            .nav-links {
+                display: none !important;
+            }
+            .mobile-menu {
+                display: block !important;
+            }
+        }
+        
+        a {
+            text-decoration: none;
+        }
+        
+        .counter {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #3B82F6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="loading-screen" id="loadingScreen">
+    <div class="loader"></div>
+</div>
+
+<div class="custom-cursor" id="cursor"></div>
+
+<a href="https://wa.me/31984012901?text=Olá! Gostaria de um orçamento para meu site." class="whatsapp-float" target="_blank">
+    <i class="fab fa-whatsapp"></i>
+</a>
+
+<nav class="navbar">
+    <div class="logo" style="font-size: 1.8rem; font-weight: 800; background: linear-gradient(135deg, #FFFFFF, #3B82F6); -webkit-background-clip: text; background-clip: text; color: transparent;">VoltWeb</div>
+    <div class="nav-links" style="display: flex; gap: 32px; align-items: center;">
+        <a href="#home">Início</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#servicos">Serviços</a>
+        <a href="#portfolio">Portfólio</a>
+        <a href="#contato">Contato</a>
+    </div>
+    <div class="mobile-menu" style="display: none; font-size: 1.8rem; cursor: pointer;"><i class="fas fa-bars"></i></div>
+</nav>
+
+<main>
+   <!-- Hero Section -->
+    <section id="home" style="position: relative; min-height: 100vh; display: flex; align-items: center; padding: 120px 6% 80px; overflow: hidden;">
+        <div id="particles-js"></div>
+        <div class="hero-glow"></div>
+        <div style="position: relative; z-index: 2; max-width: 800px;">
+            <h1 style="font-size: clamp(2.5rem, 5vw, 4.8rem); font-weight: 800; line-height: 1.2; margin-bottom: 24px;">Sites profissionais que <span style="background: linear-gradient(135deg, #3B82F6, #60A5FA); -webkit-background-clip: text; background-clip: text; color: transparent;">fazem sua empresa vender mais.</span></h1>
+            <p style="font-size: 1.2rem; color: #CBD5E1; margin-bottom: 40px; max-width: 650px;">A VoltWeb une tecnologia de ponta, design inovador e estratégias de conversão. Criamos experiências digitais que aceleram seus resultados.</p>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                <button class="btn-primary" onclick="window.location.href='#contato'">Solicitar orçamento</button>
+                <button class="btn-outline-light" onclick="window.location.href='#portfolio'">Ver projetos</button>
+            </div>
+        </div>
+        <div style="position: relative; z-index: 1; flex:1; display: flex; justify-content: center;">
+            <div style="width: 100%; max-width: 480px; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.5));">
+                <img src="https://placehold.co/600x500/0B1120/3B82F6?text=VoltWeb" style="width:100%; border-radius: 32px; opacity: 0.85;" alt="mockup">
+            </div>
+        </div>
+    </section>
+
+    <!-- Sobre + Estatísticas -->
+    <section id="sobre" style="padding: 100px 6%; background: #0F172A;">
+        <div class="reveal" style="display: flex; flex-wrap: wrap; gap: 40px; align-items: center;">
+            <div style="flex:1">
+                <span style="color:#3B82F6; letter-spacing:2px;">INOVAÇÃO & EXCELÊNCIA</span>
+                <h2 style="font-size: 2.8rem; margin: 20px 0;">Mais que código,<br> experiências que <span style="color:#3B82F6">conectam</span></h2>
+                <p style="color:#CBD5E1; line-height: 1.5;">Fundada com a missão de democratizar a alta performance digital, a VoltWeb nasceu da união entre criatividade e engenharia de software. Atendimento personalizado, velocidade extrema e sites que convertem.</p>
+                <div style="display: grid; grid-template-columns: repeat(2,1fr); gap: 30px; margin-top: 40px;">
+                    <div><h3 class="counter" data-target="30">0</h3><p>Projetos entregues</p></div>
+                    <div><h3 class="counter" data-target="28">0</h3><p>Clientes satisfeitos</p></div>
+                    <div><h3 class="counter" data-target="99">0</h3><p>Satisfação %</p></div>
+                    <div><h3 class="counter" data-target="24">0</h3><p>Suporte rápido (h)</p></div>
+                </div>
+            </div>
+            <div style="flex:1; background: rgba(37,99,235,0.1); border-radius: 48px; padding: 40px; border: 1px solid #2563EB30;">
+                <i class="fas fa-chart-line" style="font-size: 3rem; color: #3B82F6;"></i>
+                <p style="margin-top: 20px; font-style: italic;">"A VoltWeb transformou nossa presença digital. Vendas aumentaram 200% em 3 meses."</p>
+                <hr style="margin: 20px 0; border-color:#2563EB;">
+                <div><i class="fas fa-tachometer-alt"></i> Velocidade top performance</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Serviços Cards -->
+    <section id="servicos" style="padding: 100px 6%;">
+        <div style="text-align: center; margin-bottom: 60px;" class="reveal">
+            <h2 style="font-size: 2.6rem;">Soluções <span style="color:#3B82F6">completas</span> em web</h2>
+            <p style="color:#94A3B8;">Tecnologia de ponta para cada necessidade do seu negócio.</p>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(290px,1fr)); gap: 35px;">
+            <div class="service-card reveal"><div class="service-icon"><i class="fas fa-building"></i></div><h3>Sites Institucionais</h3><p>Presença profissional e credibilidade para sua marca.</p></div>
+            <div class="service-card reveal"><div class="service-icon"><i class="fas fa-rocket"></i></div><h3>Landing Pages</h3><p>Alta conversão para campanhas e produtos.</p></div>
+<!--             <div class="service-card reveal"><div class="service-icon"><i class="fas fa-store"></i></div><h3>Lojas Virtuais</h3><p>E-commerces escaláveis e seguros.</p></div> -->
+            <div class="service-card reveal"><div class="service-icon"><i class="fas fa-mobile-alt"></i></div><h3>Sites Responsivos</h3><p>Experiência perfeita em qualquer dispositivo.</p></div>
+<!--             <div class="service-card reveal"><div class="service-icon"><i class="fas fa-chart-simple"></i></div><h3>SEO Avançado</h3><p>Domine os mecanismos de busca.</p></div> -->
+            <div class="service-card reveal"><div class="service-icon"><i class="fas fa-bolt"></i></div><h3>Otimização Performance</h3><p>Velocidade que encanta usuários e Google.</p></div>
+            <div class="service-card reveal"><div class="service-icon"><i class="fab fa-whatsapp"></i></div><h3>Integração WhatsApp</h3><p>Atendimento direto e conversão imediata.</p></div>
+            <div class="service-card reveal"><div class="service-icon"><i class="fas fa-server"></i></div><h3>Hospedagem + Suporte</h3><p>Infraestrutura premium com monitoramento 24/7.</p></div>
+        </div>
+    </section>
+
+<!--     Portfólio
+    <section id="portfolio" style="padding: 80px 6%; background: #0B1120;">
+        <div class="reveal" style="text-align: center; margin-bottom: 50px;">
+            <h2>Projetos que <span style="color:#3B82F6">inspiram</span></h2>
+            <p>Cases reais de sucesso digital</p>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+            <div class="portfolio-item reveal"><div class="portfolio-img"><i class="fas fa-laptop-code fa-4x"></i></div><div class="overlay-port"><h4>TechCorp</h4><p>Site institucional + blog</p><button class="btn-outline-light" style="padding: 8px 16px;">Ver projeto</button></div></div>
+            <div class="portfolio-item reveal"><div class="portfolio-img"><i class="fas fa-shopping-cart fa-4x"></i></div><div class="overlay-port"><h4>ModaStore</h4><p>E-commerce completo</p><button class="btn-outline-light" style="padding: 8px 16px;">Ver projeto</button></div></div>
+            <div class="portfolio-item reveal"><div class="portfolio-img"><i class="fas fa-chalkboard-user fa-4x"></i></div><div class="overlay-port"><h4>Academy.fit</h4><p>Landing page + integração</p><button class="btn-outline-light" style="padding: 8px 16px;">Ver projeto</button></div></div>
+        </div>
+    </section>  -->
+
+    <!-- Diferenciais -->
+    <section style="padding: 100px 6%; background: #111827;">
+        <div class="reveal" style="text-align: center;"><h2>Diferenciais <span style="color:#3B82F6">VoltWeb</span></h2><p>Porque marcas de sucesso confiam em nós</p></div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 40px; margin-top: 60px;">
+            <div class="reveal" style="text-align: center;"><i class="fas fa-palette fa-3x" style="color:#3B82F6;"></i><h3>Design Moderno</h3><p>UI/UX premiado e inovador</p></div>
+            <div class="reveal" style="text-align: center;"><i class="fas fa-gauge-high fa-3x" style="color:#3B82F6;"></i><h3>Alta Velocidade</h3><p>Core Web Vitals otimizados</p></div>
+            <div class="reveal" style="text-align: center;"><i class="fas fa-tablet-alt fa-3x" style="color:#3B82F6;"></i><h3>Responsividade Total</h3><p>Fluidez em todos os devices</p></div>
+  <!--           <div class="reveal" style="text-align: center;"><i class="fas fa-chart-line fa-3x" style="color:#3B82F6;"></i><h3>SEO Otimizado</h3><p>Rankeie no topo do Google</p></div> -->
+            <div class="reveal" style="text-align: center;"><i class="fas fa-headset fa-3x" style="color:#3B82F6;"></i><h3>Atendimento Rápido</h3><p>Suporte humanizado</p></div>
+            <div class="reveal" style="text-align: center;"><i class="fas fa-shield-alt fa-3x" style="color:#3B82F6;"></i><h3>Segurança Máxima</h3><p>SSL e proteção avançada</p></div>
+        </div>
+    </section>
+
+    <!-- Depoimentos Slider-->
+    <section style="padding: 100px 6%;">
+        <div class="reveal" style="text-align: center;"><h2>O que nossos <span style="color:#3B82F6">clientes</span> dizem</h2></div>
+        <div style="overflow-x: auto; white-space: nowrap; padding: 20px 0; cursor: grab;" class="carousel-track">
+            <div style="display: inline-flex; gap: 25px;">
+                <div class="testimonial-card" style="width: 320px; white-space: normal; display: inline-block;"><img src="https://randomuser.me/api/portraits/women/68.jpg" style="width: 60px; height:60px; border-radius: 50%; object-fit: cover;"><h4>Ana Beatriz</h4><small>CEO, BrandUp</small><p>"Nossas vendas decolaram após o novo site! VoltWeb superou expectativas."</p></div>
+                <div class="testimonial-card" style="width: 320px; white-space: normal; display: inline-block;"><img src="https://randomuser.me/api/portraits/men/32.jpg" style="width: 60px; height:60px; border-radius: 50%; object-fit: cover;"><h4>Carlos Mendes</h4><small>Diretor, TechInova</small><p>"Performance e design impecáveis. Suporte sempre presente."</p></div>
+                <div class="testimonial-card" style="width: 320px; white-space: normal; display: inline-block;"><img src="https://randomuser.me/api/portraits/women/45.jpg" style="width: 60px; height:60px; border-radius: 50%; object-fit: cover;"><h4>Fernanda Rios</h4><small>Empreendedora</small><p>"Conversão aumentou 150% em 2 meses. Muito obrigado VoltWeb!"</p></div>
+                <div class="testimonial-card" style="width: 320px; white-space: normal; display: inline-block;"><img src="https://randomuser.me/api/portraits/men/75.jpg" style="width: 60px; height:60px; border-radius: 50%; object-fit: cover;"><h4>Ricardo Lima</h4><small>CTO, DevSolutions</small><p>"Entregaram antes do prazo com qualidade excepcional."</p></div>
+            </div>
+        </div>
+    </section>
+
+<!--   CTA Forte
+    <section style="padding: 90px 6%; background: linear-gradient(135deg, #0B1120, #0F172A); border-radius: 60px; margin: 30px 6%; text-align: center; position: relative; overflow: hidden;">
+        <div style="position: absolute; width: 300px; height: 300px; background: #2563EB20; filter: blur(80px); top: -80px; right: -50px;"></div>
+        <h2 style="font-size: 2.8rem;">Seu próximo site começa aqui.</h2>
+        <p style="margin: 20px auto; max-width: 600px;">Pronto para acelerar seus resultados com uma presença digital imbatível?</p>
+        <button class="btn-primary" onclick="window.open('https://wa.me/5511999999999','_blank')" style="font-size: 1.2rem;"><i class="fab fa-whatsapp"></i> Falar no WhatsApp</button>
+    </section> -->
+
+    <!-- Contato - Versão com Botão de E-mail -->
+<section id="contato" style="padding: 80px 6%; display: flex; flex-wrap: wrap; gap: 50px;">
+    <div style="flex:1" class="reveal">
+        <h2>Vamos criar algo <span style="color:#3B82F6">incrível</span></h2>
+        <p style="font-size: 1.1rem; margin: 20px 0;">Entre em contato e descubra como podemos transformar sua presença digital.</p>
+        
+        <div style="margin-top: 40px;">
+            <div style="display: flex; align-items: center; margin-bottom: 25px;">
+                <div style="width: 50px; height: 50px; background: rgba(37,99,235,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                    <i class="fas fa-envelope" style="color:#3B82F6; font-size: 1.3rem;"></i>
+                </div>
+                <div>
+                    <p style="color:#94A3B8; font-size: 0.9rem;">E-mail comercial</p>
+                    <h4 style="color: white;">voltwebsistemas@gmail.com</h4>
+                </div>
+            </div>
+            
+            <div style="display: flex; align-items: center; margin-bottom: 25px;">
+                <div style="width: 50px; height: 50px; background: rgba(37,99,235,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                    <i class="fas fa-phone-alt" style="color:#3B82F6; font-size: 1.3rem;"></i>
+                </div>
+                <div>
+                    <p style="color:#94A3B8; font-size: 0.9rem;">Telefone/WhatsApp</p>
+                    <h4 style="color: white;">(31)98401-2901</h4>
+                </div>
+            </div>
+            
+            <div style="display: flex; align-items: center; margin-bottom: 25px;">
+                <div style="width: 50px; height: 50px; background: rgba(37,99,235,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                    <i class="fab fa-instagram" style="color:#3B82F6; font-size: 1.3rem;"></i>
+                </div>
+                <div>
+                    <p style="color:#94A3B8; font-size: 0.9rem;">Redes Sociais</p>
+                    <h4 style="color: white;"></h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div style="flex:1" class="reveal">
+        <div style="background: linear-gradient(135deg, rgba(37,99,235,0.1), rgba(59,130,246,0.05)); border-radius: 32px; padding: 50px 40px; text-align: center; border: 1px solid rgba(59,130,246,0.2);">
+            <div style="margin-bottom: 30px;">
+                <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #2563EB, #3B82F6); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                    <i class="fa-regular fa-envelope" style="font-size: 2rem; color: white;"></i>
+                </div>
+                <h3 style="margin-bottom: 15px;">Fale com a gente</h3>
+                <p style="color: #94A3B8; margin-bottom: 30px;">Clique no botão abaixo e nos envie um e-mail. Respondemos em até 2 horas úteis!</p>
+            </div>
+            
+            <button onclick="abrirEmail()" class="btn-primary" style="font-size: 1.1rem; padding: 16px 40px; width: 100%;">
+                <i class="fas fa-envelope"></i> Enviar E-mail
+            </button>
+            
+            <div style="margin-top: 30px; padding-top: 30px; border-top: 1px solid rgba(59,130,246,0.2);">
+                <p style="color: #94A3B8; font-size: 0.9rem;">Ou se preferir, fale pelo WhatsApp</p>
+                <button onclick="window.open('https://wa.me/31984012901','_blank')" class="btn-outline-light" style="margin-top: 15px; width: 100%;">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function abrirEmail() {
+    // Seu e-mail comercial - MUDE AQUI para o seu e-mail!
+    const email = "voltwebsistemas@gmail.com";
+    
+    // Assunto pré-definido
+    const assunto = "Orçamento - Site VoltWeb";
+    
+    // Corpo do e-mail com algumas informações pré-preenchidas
+    const corpo = `Olá, time VoltWeb!
+    
+Vi o site de vocês e gostaria de mais informações sobre a criação de um site profissional para minha empresa.
+
+Meu nome: 
+Telefone para contato: 
+
+Gostaria de saber sobre:
+[  ] Site Institucional
+[  ] Landing Page
+[  ] Loja Virtual
+[  ] Outro
+
+Mensagem adicional:
+__________________________________________
+
+Aguardo retorno. Obrigado!`;
+    
+    // Codificar para URL
+    const assuntoCodificado = encodeURIComponent(assunto);
+    const corpoCodificado = encodeURIComponent(corpo);
+    
+    // Abrir cliente de e-mail
+    window.location.href = `mailto:${email}?subject=${assuntoCodificado}&body=${corpoCodificado}`;
+    
+    // Fallback: Se não abrir, mostrar alerta
+    setTimeout(() => {
+        alert("📧 Se o e-mail não abriu automaticamente, copie o endereço:\n\nvoltwebsistemas@gmail.com\n\nEnvie sua mensagem para nós!");
+    }, 200);
+}
+</script>
+
+    <!-- Footer -->
+    <footer style="background:#050A14; padding: 50px 6% 30px; border-top: 1px solid #2563EB30;">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 30px;">
+            <div>
+                <h2 style="font-size: 2rem; background: linear-gradient(135deg, #FFFFFF, #3B82F6); -webkit-background-clip: text; background-clip: text; color: transparent;">VoltWeb</h2>
+                <p style="color:#94A3B8; margin-top: 10px;">Tecnologia que transforma negócios.</p>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 15px;">Links Rápidos</h4>
+                <a href="#home" style="display:block; color:#94A3B8; margin-bottom: 8px;">Início</a>
+                <a href="#sobre" style="display:block; color:#94A3B8; margin-bottom: 8px;">Sobre</a>
+                <a href="#servicos" style="display:block; color:#94A3B8; margin-bottom: 8px;">Serviços</a>
+                <a href="#portfolio" style="display:block; color:#94A3B8;">Portfólio</a>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 15px;">Redes Sociais</h4>
+                <i class="fab fa-instagram fa-lg" style="margin-right: 15px; color:#3B82F6; cursor: pointer;"></i>
+                <i class="fab fa-linkedin fa-lg" style="margin-right: 15px; color:#3B82F6; cursor: pointer;"></i>
+                <i class="fab fa-facebook fa-lg" style="color:#3B82F6; cursor: pointer;"></i>
+            </div>
+        </div>
+        <hr style="margin: 30px 0 20px; border-color:#1E293B;">
+        <div style="text-align: center; color:#5B6E8C;">©𝔠𝔞𝔦𝔬 2026 VoltWeb — Inovação e alto desempenho digital.</div>
+    </footer>
+</main>
+
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+    // LOADING SCREEN
+    window.addEventListener("load", () => {
+        setTimeout(() => { 
+            document.getElementById("loadingScreen").style.opacity = "0"; 
+            setTimeout(() => { 
+                document.getElementById("loadingScreen").style.display = "none"; 
+            }, 500); 
+        }, 500);
+    });
+
+    // Particles
+    particlesJS("particles-js", {
+        particles: { 
+            number: { value: 60 }, 
+            color: { value: "#3B82F6" }, 
+            shape: { type: "circle" }, 
+            opacity: { value: 0.2 }, 
+            size: { value: 2 }, 
+            move: { speed: 1.5 } 
+        },
+        interactivity: { 
+            events: { 
+                onhover: { enable: true, mode: "repulse" } 
+            } 
+        }
+    });
+
+    // Navbar scroll effect
+    window.addEventListener("scroll", () => {
+        const navbar = document.querySelector(".navbar");
+        if (window.scrollY > 50) {
+            navbar.classList.add("scrolled");
+        } else {
+            navbar.classList.remove("scrolled");
+        }
+    });
+
+    // Scroll reveal + GSAP animations
+    gsap.registerPlugin(ScrollTrigger);
+    const reveals = document.querySelectorAll(".reveal");
+    reveals.forEach(el => {
+        ScrollTrigger.create({ 
+            trigger: el, 
+            start: "top 85%", 
+            onEnter: () => el.classList.add("active"), 
+            once: true 
+        });
+    });
+
+    // Animated Counters
+    const counters = document.querySelectorAll(".counter");
+    let countersStarted = false;
+    
+    const startCounters = () => {
+        if (countersStarted) return;
+        countersStarted = true;
+        counters.forEach(c => {
+            const target = parseInt(c.getAttribute("data-target"));
+            let count = 0;
+            const update = () => { 
+                count += Math.ceil(target / 40); 
+                if (count >= target) { 
+                    c.innerText = target + (c.innerText.includes('%') ? '%' : ''); 
+                    return; 
+                } 
+                c.innerText = count; 
+                requestAnimationFrame(update); 
+            };
+            update();
+        });
+    };
+    
+    ScrollTrigger.create({ 
+        trigger: "#sobre", 
+        start: "top 70%", 
+        onEnter: startCounters, 
+        once: true 
+    });
+
+    // Custom cursor
+    const cursor = document.getElementById("cursor");
+    document.addEventListener("mousemove", (e) => { 
+        cursor.style.transform = `translate(${e.clientX - 4}px, ${e.clientY - 4}px)`; 
+    });
+    
+    const btns = document.querySelectorAll("button, .service-card, .portfolio-item");
+    btns.forEach(btn => {
+        btn.addEventListener("mouseenter", () => { 
+            cursor.style.transform += " scale(2.5)"; 
+            cursor.style.background = "#60A5FA"; 
+        });
+        btn.addEventListener("mouseleave", () => { 
+            cursor.style.transform = cursor.style.transform.replace(" scale(2.5)", ""); 
+            cursor.style.background = "#3B82F6"; 
+        });
+    });
+
+    // Contact form
+    document.getElementById("contactForm").addEventListener("submit", (e) => { 
+        e.preventDefault(); 
+        alert("✅ Mensagem enviada! Em breve nosso time retorna."); 
+        e.target.reset();
+    });
+    
+    // Smooth scroll for nav links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+</script>
+</body>
+</html>
